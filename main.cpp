@@ -6,12 +6,12 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    // Organization description
+    // Description of Organization
     //
     a.setApplicationName("Archiver");
     a.setOrganizationName("Home");
 
-    // get work path from cmd line
+    // Get work path from cmd line
     //
     QDir dir;
     if (argc >= 2)
@@ -21,10 +21,6 @@ int main(int argc, char *argv[])
         dir = QDir::currentPath();
 
     QString path = dir.absolutePath();
-
-
-    if(!dir.exists())
-        path = QDir::currentPath();
 
     // MainWindow
     //

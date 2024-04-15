@@ -63,7 +63,7 @@ private:
 
 class FilesModel : public QAbstractTableModel
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
 
@@ -78,10 +78,10 @@ public:
 
     bool append(const FileItem &item);
     FileItem at(int index) const;
-	void remove(const std::vector<int>& removeIndexList);
+    void remove(const std::vector<int>& removeIndexList);
 
     void set(const std::vector<FileItem> &list_add);
-	void clear();
+    void clear();
 
 private:
 
@@ -89,18 +89,18 @@ private:
     std::vector<FileItem> m_filesList;
     quint64 m_filesCount = 0;
 
-	int columnCount(const QModelIndex &parent) const override;
-	int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent=QModelIndex()) const override;
 
-	QVariant headerData(int section,Qt::Orientation orientation, int role=Qt::DisplayRole) const override;
-	QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section,Qt::Orientation orientation, int role=Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
 };
 
 // ==============================================================================================
 
 class FilesView : public QTableView
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
 
@@ -109,29 +109,29 @@ public:
 
 private:
 
-	//
-	//
-	QMenu* m_pContextMenu = nullptr;
+    //
+    //
+    QMenu* m_pContextMenu = nullptr;
 
     QAction* m_pEncodeAction = nullptr;
     QAction* m_pDecodeAction = nullptr;
 
-	QMenu* m_headerContextMenu = nullptr;
-	std::vector<QAction*> m_pColumnActionList;
+    QMenu* m_headerContextMenu = nullptr;
+    std::vector<QAction*> m_pColumnActionList;
 
-	//
-	//
+    //
+    //
     FilesModel m_model;
 
-	void createContextMenu();
+    void createContextMenu();
 
-	void createHeaderContextMenu();
+    void createHeaderContextMenu();
     void hideListColumn(int column, bool hide);
-	int firstVisibleColumn();
+    int firstVisibleColumn();
 
 protected:
 
-	bool eventFilter(QObject* object, QEvent* e) override;
+    bool eventFilter(QObject* object, QEvent* e) override;
 
 signals:
 
@@ -141,25 +141,25 @@ signals:
 
 public slots:
 
-	//
-	//
+    //
+    //
     void onFilesLoaded(const std::vector<FileItem>& list_add);
 
     void onEncode() { emit fileEncode(); }
     void onDecode() { emit fileDecode(); }
 
-	// slots of menu
-	//
-	void onContextMenu(const QPoint&);
+    // slots of menu
+    //
+    void onContextMenu(const QPoint&);
 
-	// Slot of Click
-	//
+    // Slot of Click
+    //
     void onListCliked(const QModelIndex& index);
 
-	// slots for list header, to hide or show columns
-	//
-	void onHeaderContextMenu(QPoint);
-	void onColumnAction(QAction* action);
+    // slots for list header, to hide or show columns
+    //
+    void onHeaderContextMenu(QPoint);
+    void onColumnAction(QAction* action);
 };
 
 // ==============================================================================================

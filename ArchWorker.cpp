@@ -6,9 +6,6 @@
 
 namespace Arch
 {
-
-
-
     Worker::Worker(QObject *parent) : QObject{parent}
     {
     }
