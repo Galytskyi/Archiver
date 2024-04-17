@@ -23,6 +23,7 @@
 // Qt includes
 //
 #include <QApplication>
+#include <QDesktopServices>
 
 #include <QCommandLineParser>
 #include <QCoreApplication>

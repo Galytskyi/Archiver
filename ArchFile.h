@@ -1,7 +1,6 @@
 #ifndef ARCHFILE_H
 #define ARCHFILE_H
 
-
 // -------------------------------------------------------------------------------------
 
 const char* const FilesFilters[] =

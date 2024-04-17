@@ -1,31 +1,11 @@
 #include "MainWindow.h"
 
-#include <QApplication>
-#include <QSettings>
-#include <QMessageBox>
-#include <QMenuBar>
-#include <QToolBar>
-#include <QStatusBar>
-#include <QTabWidget>
-#include <QTableView>
-#include <QDockWidget>
-#include <QCloseEvent>
-#include <QDesktopServices>
-#include <QFile>
-
-
 MainWindow::MainWindow(const QString& path, QWidget *parent)
     : QMainWindow(parent)
     , m_path(path)
 {
-
-    // init interface
-    //
     createInterface();
-
-    //
-    //
-    loadFilesList();
+    loadFiles();
 }
 
 MainWindow::~MainWindow()
@@ -48,6 +28,8 @@ bool MainWindow::createInterface()
     createStatusBar();
 
     loadSettings();
+
+    connect(&m_workerThreads, &WorkersBase::workerFinished, this, &MainWindow::onWorkerFinished);
 
     return true;
 }
@@ -278,7 +260,7 @@ void MainWindow::onFilesFilter(int index)
 
     m_filterType = filterType;
 
-    loadFilesList();
+    loadFiles();
 }
 
 void MainWindow::startWorker(Arch::OperationType operationType)
@@ -287,54 +269,8 @@ void MainWindow::startWorker(Arch::OperationType operationType)
     {
         return;
     }
-    
-    Arch::Worker* pWorker = new Arch::Worker(m_selectedfile.fileName());
-    if (pWorker == nullptr)
-    {
-        return;
-    }
 
-    m_workers.append(pWorker);
-
-    QThread* pThread = new QThread();
-    if (pThread == nullptr)
-    {
-        return;
-    }
-
-    switch(operationType)
-    {
-        case Arch::OperationType::Encode:
-            connect(pThread, &QThread::started, pWorker, &Arch::Worker::encode);
-            break;
-        
-        case Arch::OperationType::Decode:
-            connect(pThread, &QThread::started, pWorker, &Arch::Worker::decode);
-            break;
-    }
-
-    connect(pWorker, &Arch::Worker::finished, this, &MainWindow::onWorkerFinished);
-    connect(pWorker, &Arch::Worker::finished, pThread, &QThread::terminate);
-
-    pWorker->moveToThread(pThread);
-    pThread->start();
-}
-
-
-void MainWindow::onWorkerFinished()
-{
-    Arch::Worker* pWorker = qobject_cast<Arch::Worker*>(sender());
-    if (pWorker == nullptr)
-    {
-        return;
-    }
-
-    Arch::WorkerErrors result = pWorker->lastError();
-
-    m_workers.remove(pWorker);
-
-    if (result == Arch::WorkerErrors::NoErrors)
-        loadFilesList();
+    m_workerThreads.appendWorkerThread(m_selectedfile.fileName(), operationType);
 }
 
 void MainWindow::loadSettings()
@@ -356,7 +292,7 @@ void MainWindow::saveSettings()
     s.setValue(QString("%1MainWindow/State").arg(WINDOW_GEOMETRY_OPTIONS_KEY), saveState());
 }
 
-void MainWindow::loadFilesList()
+void MainWindow::loadFiles()
 {
     if (m_filterType < 0 || m_filterType >= FilesFiltersCount)
         return;
@@ -364,16 +300,7 @@ void MainWindow::loadFilesList()
     if (m_path.isEmpty())
         return;
 
-    m_files.clear();
-
-    QDir dir = QDir(m_path);
-
-    QFileInfoList list = dir.entryInfoList(QStringList(FilesFilters[m_filterType]), QDir::Files | QDir::NoDotAndDotDot);
-    foreach (QFileInfo finfo, list)
-    {
-        FileItem item(finfo.fileName(), finfo.size());
-        m_files.push_back(item);
-    }
+    m_files = loadFilesList(m_path, FilesFilters[m_filterType]);
 
     emit filesLoaded(m_files);
 }
@@ -382,7 +309,7 @@ void MainWindow::closeEvent(QCloseEvent* e)
 {
     // proccess of decodering is not finised
     //
-    if (!m_workers.isEmpty())
+    if (!m_workerThreads.isEmpty())
         return;
 
     saveSettings();

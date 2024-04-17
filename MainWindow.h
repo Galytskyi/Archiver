@@ -1,9 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QLabel>
-
 #include "ArchFile.h"
 #include "ArchWorker.h"
 #include "WorkersBase.h"
@@ -30,7 +27,7 @@ private:
     std::vector<FileItem> m_files;
     FileItem m_selectedfile;
     
-    WorkersBase m_workers;
+    WorkersBase m_workerThreads;
 
  private:
 
@@ -88,7 +85,7 @@ private:
     void loadSettings();
     void saveSettings();
 
-    void loadFilesList();
+    void loadFiles();
     void startWorker(Arch::OperationType operationType);
 
 protected:
@@ -132,7 +129,7 @@ private slots:
 
     // slots of m_workers
     //
-    void onWorkerFinished();
+    void onWorkerFinished() { loadFiles(); }
 };
 
 // ----------------------------------------------------------------------------------------------

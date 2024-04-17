@@ -17,12 +17,20 @@ public:
 
     bool isEmpty();
     
-    void append(Arch::Worker* pWorker);
-    void remove(Arch::Worker* pWorker);
+    void appendWorkerThread(const QString& fileName, Arch::OperationType operationType);
 
 private:
     QMutex m_mutex;
     std::vector<Arch::Worker*> m_workers;
+
+signals:
+
+    void workerFinished();
+
+public slots:
+
+    void onFinished();
+
 };
 
 #endif // WORKERSBASE_H

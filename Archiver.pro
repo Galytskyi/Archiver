@@ -19,7 +19,7 @@ TEMPLATE = app
 
 #Application icon
 #
-in32:RC_ICONS += icons/Archiver.ico
+win32:RC_ICONS += icons/Archiver.ico
 
 # DESTDIR
 #
@@ -39,6 +39,7 @@ SOURCES += \
     ArchWorker.cpp \
     BarchArchFile.cpp \
     BmpArchFile.cpp \
+    FilesModel.cpp \
     FilesView.cpp \
     WorkersBase.cpp \
     main.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     ArchWorker.h \
     BarchArchFile.h \
     BmpArchFile.h \
+    FilesModel.h \
     FilesView.h \
     MainWindow.h \
     WorkersBase.h

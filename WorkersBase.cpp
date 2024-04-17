@@ -26,23 +26,54 @@ bool WorkersBase::isEmpty()
     return m_workers.empty();
 }
 
-void WorkersBase::append(Arch::Worker* pWorker)
+void WorkersBase::appendWorkerThread(const QString& fileName, Arch::OperationType operationType)
 {
+    Arch::Worker* pWorker = new Arch::Worker(fileName);
     if (pWorker == nullptr)
     {
         return;
     }
 
-    QMutexLocker locker(&m_mutex);
+    QThread* pThread = new QThread();
+    if (pThread == nullptr)
+    {
+        return;
+    }
 
-    m_workers.push_back(pWorker);
+    m_mutex.lock();
+        m_workers.push_back(pWorker);
+    m_mutex.unlock();
+
+    switch(operationType)
+    {
+    case Arch::OperationType::Encode:
+        connect(pThread, &QThread::started, pWorker, &Arch::Worker::encode);
+        break;
+
+    case Arch::OperationType::Decode:
+        connect(pThread, &QThread::started, pWorker, &Arch::Worker::decode);
+        break;
+    }
+
+    connect(pWorker, &Arch::Worker::finished, this, &WorkersBase::onFinished);
+    connect(pWorker, &Arch::Worker::finished, pThread, &QThread::terminate);
+
+    pWorker->moveToThread(pThread);
+    pThread->start();
 }
 
-void WorkersBase::remove(Arch::Worker* pWorker)
+void WorkersBase::onFinished()
 {
+    Arch::Worker* pWorker = qobject_cast<Arch::Worker*>(sender());
     if (pWorker == nullptr)
     {
         return;
+    }
+
+    Arch::WorkerErrors result = pWorker->lastError();
+    if (result == Arch::WorkerErrors::NoErrors)
+    {
+        emit workerFinished(); // update list of files in the main window
     }
 
     QMutexLocker locker(&m_mutex);
@@ -52,4 +83,3 @@ void WorkersBase::remove(Arch::Worker* pWorker)
 
     delete pWorker;
 }
-
