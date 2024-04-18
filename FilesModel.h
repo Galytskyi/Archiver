@@ -71,7 +71,7 @@ class FilesModel : public QAbstractTableModel
 public:
 
     explicit FilesModel(QObject* parent = nullptr);
-    FilesModel(const QString path, QObject* parent = nullptr);
+    FilesModel(const QString path, const QString filter, QObject* parent = nullptr);
     virtual ~FilesModel() override;
 
 public:
@@ -87,9 +87,12 @@ public:
     void set(const std::vector<FileItem> &list_add);
     void clear();
 
+    Q_INVOKABLE void setFiles(const QString& filter);
+
 private:
 
     QString m_path;
+    QString m_filter;
 
     mutable QMutex m_filesMutex;
     std::vector<FileItem> m_filesList;

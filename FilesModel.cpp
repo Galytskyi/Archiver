@@ -29,8 +29,9 @@ FilesModel::FilesModel(QObject* parent)
 {
 }
 
-FilesModel::FilesModel(const QString path, QObject*)
+FilesModel::FilesModel(const QString path, const QString filter, QObject*)
     : m_path(path)
+    , m_filter(filter)
 {
 }
 
@@ -262,15 +263,21 @@ void FilesModel::clear()
 	endRemoveRows();
 }
 
+void FilesModel::setFiles(const QString& filter)
+{
+    m_filter = filter;
+    onFilesUpdated();
+}
+
 void FilesModel::onFilesUpdated()
 {
-    if (m_path.isEmpty())
+    if (m_path.isEmpty() || m_filter.isEmpty())
     {
         return;
     }
 
     clear();
-    set(loadFilesList(m_path, "*.*"));
+    set(loadFilesList(m_path, m_filter));
 }
 
 

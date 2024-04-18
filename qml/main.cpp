@@ -25,11 +25,26 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
+    //
+    //
     WorkersBase workerThreads;
     engine.rootContext()->setContextProperty("workerThreads", &workerThreads);
 
-    FilesModel tableMode(path) ;
-    tableMode.set(loadFilesList(path, "*.*"));
+    //
+    //
+    QStringListModel filtersModel;
+    QStringList filters;
+    for(const auto& s : FilesFilters)
+        filters << s;
+    filtersModel.setStringList(filters);
+    engine.rootContext()->setContextProperty("filtersModel", &filtersModel);
+
+    //
+    //
+    QString initFilter = FilesFilters[FileFilters_All];
+
+    FilesModel tableMode(path, initFilter) ;
+    tableMode.set(loadFilesList(path, initFilter));
     engine.rootContext()->setContextProperty("tableModel", &tableMode);
 
     QObject::connect(&workerThreads, &WorkersBase::workerFinished, &tableMode, &FilesModel::onFilesUpdated, Qt::QueuedConnection);

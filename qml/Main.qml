@@ -12,6 +12,8 @@ Window
     visible: true
     title: qsTr("Hello World")
 
+    property int side_margin: 20
+
     function encode(file_name)
     {
         console.log("encode: " + file_name);
@@ -24,15 +26,56 @@ Window
         workerThreads.appendDecodeFile(file_name);
     }
 
-    Page
+    ColumnLayout
     {
-        id: page
         anchors.fill: parent
+        anchors.leftMargin: side_margin
+        anchors.rightMargin: side_margin
+        anchors.topMargin: side_margin
+
+        spacing: side_margin / 2
+
+        RowLayout
+        {
+            anchors.fill: parent
+
+            Label
+            {
+                text: "Filter for file list: "
+            }
+
+            ComboBox
+            {
+                id: cmbFilter
+                Layout.fillWidth:  true
+                font.pixelSize: 14
+
+                model: filtersModel
+                textRole: "display"
+
+                onActivated:
+                {
+                    console.log("Set filter: " + cmbFilter.currentText);
+                    tableModel.setFiles(cmbFilter.currentText);
+                }
+            }
+        }
+
+        Label
+        {
+            text: "File list"
+            font.pointSize: 14
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
 
         ListView
         {
             id: listView
-            anchors.fill: parent
+            //anchors.fill: parent
+
+            Layout.fillWidth:  true
+            Layout.fillHeight:  true
+
             ScrollBar.vertical: ScrollBar {}
 
             model: tableModel
@@ -56,5 +99,6 @@ Window
                 }
             }
         }
+
     }
 }
