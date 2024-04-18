@@ -1,4 +1,4 @@
-#include "BarchArchFile.h"
+#include "../BarchArchFile.h"
 
 BarchFile::BarchFile()
 {

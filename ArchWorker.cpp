@@ -1,8 +1,7 @@
-#include "ArchWorker.h"
+#include "../ArchWorker.h"
 
-#include "BmpArchFile.h"
-#include "BarchArchFile.h"
-
+#include "../BmpArchFile.h"
+#include "../BarchArchFile.h"
 
 namespace Arch
 {

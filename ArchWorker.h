@@ -1,7 +1,7 @@
 #ifndef ARCHWORKER_H
 #define ARCHWORKER_H
 
-#include <QObject>
+//#include <QObject>
 
 namespace Arch
 {

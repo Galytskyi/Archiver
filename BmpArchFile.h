@@ -1,7 +1,7 @@
 #ifndef BMPARCHFILE_H
 #define BMPARCHFILE_H
 
-#include "ArchFile.h"
+#include "../ArchFile.h"
 
 // -------------------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-#include "BmpArchFile.h"
+#include "../BmpArchFile.h"
 
 #include <QFile>
 

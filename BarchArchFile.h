@@ -1,7 +1,7 @@
 #ifndef BARCHARCHFILE_H
 #define BARCHARCHFILE_H
 
-#include "ArchFile.h"
+#include "../ArchFile.h"
 
 // -------------------------------------------------------------------------------------
 

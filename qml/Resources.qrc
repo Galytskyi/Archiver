@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../bin/bmpHeader.bin</file>
+        <file>../icons/About.png</file>
+        <file>../icons/Decode.png</file>
+        <file>../icons/Encode.png</file>
+        <file>../icons/Archiver.ico</file>
+        <file>../docs/Manual.pdf</file>
+        <file>DelegateItem.qml</file>
+        <file>Main.qml</file>
+    </qresource>
+</RCC>

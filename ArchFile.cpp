@@ -1,6 +1,6 @@
-#include "ArchFile.h"
+#include "../ArchFile.h"
 
-#include "ArchWorker.h"
+#include "../ArchWorker.h"
 
 namespace Arch
 {

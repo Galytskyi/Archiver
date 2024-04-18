@@ -1,7 +1,7 @@
 #ifndef WORKERSBASE_H
 #define WORKERSBASE_H
 
-#include "ArchWorker.h"
+#include "../ArchWorker.h"
 
 class WorkersBase : public QObject
 {

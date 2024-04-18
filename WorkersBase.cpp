@@ -1,4 +1,4 @@
-#include "WorkersBase.h"
+#include "../WorkersBase.h"
 
 WorkersBase::WorkersBase(QObject* parent)
     : QObject{parent}
