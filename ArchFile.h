@@ -74,7 +74,11 @@ namespace Arch
         uint32_t m_blockCount = 0;
     };
 
-    std::string removeExtension( std::string const& filename );
+    // -------------------------------------------------------------------------------------
+
+    std::string removeExtension(std::string const& filename);
+
+    std::string getWorkDir(int &argc, char** argv);
 
     // -------------------------------------------------------------------------------------
  }

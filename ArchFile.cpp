@@ -4,6 +4,8 @@
 
 namespace Arch
 {
+    // -------------------------------------------------------------------------------------
+
     File::File()
     {
     }
@@ -39,9 +41,25 @@ namespace Arch
         m_blockCount = m_realRowWidth / BLOCK_SIZE;
     }
 
-    std::string removeExtension( std::string const& filename )
+    // -------------------------------------------------------------------------------------
+
+    std::string removeExtension(std::string const& filename)
     {
         std::string::const_reverse_iterator pivot = std::find( filename.rbegin(), filename.rend(), '.' );
         return pivot == filename.rend() ? filename : std::string( filename.begin(), pivot.base() - 1 );
     }
+
+    std::string getWorkDir(int &argc, char** argv)
+    {
+        QDir dir;
+        if (argc >= 2)
+            dir = QDir(argv[1]);
+
+        if (!dir.exists())
+            dir = QDir::currentPath();
+
+        return dir.absolutePath().toStdString();
+    }
+
+    // -------------------------------------------------------------------------------------
 }

@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "ArchFile.h"
-#include "ArchWorker.h"
 #include "WorkersBase.h"
 #include "FilesView.h"
 
@@ -86,7 +85,6 @@ private:
     void saveSettings();
 
     void loadFiles();
-    void startWorker(Arch::OperationType operationType);
 
 protected:
 

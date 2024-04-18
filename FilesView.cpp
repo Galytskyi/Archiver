@@ -35,9 +35,9 @@ void FilesView::createContextMenu()
     //
     m_pContextMenu = new QMenu(tr("&Files"), this);
 
-    m_pEncodeAction = m_pContextMenu->addAction(tr("&Encode ..."));
+    m_pEncodeAction = m_pContextMenu->addAction(tr("&Encode (Bmp to Barch)"));
     m_pEncodeAction->setIcon(QIcon(":/icons/Encode.png"));
-    m_pDecodeAction = m_pContextMenu->addAction(tr("&Decode ..."));
+    m_pDecodeAction = m_pContextMenu->addAction(tr("&Decode (Barch to Bmp)"));
     m_pDecodeAction->setIcon(QIcon(":/icons/Decode.png"));
 
     connect(m_pEncodeAction, &QAction::triggered, this, &FilesView::onEncode, Qt::QueuedConnection);

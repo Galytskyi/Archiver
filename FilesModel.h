@@ -1,6 +1,8 @@
 #ifndef FILESMODEL_H
 #define FILESMODEL_H
 
+#include <QAbstractTableModel>
+
 // ----------------------------------------------------------------------------------------------
 
 const char* const FilesModelColumn[] =
@@ -69,6 +71,7 @@ class FilesModel : public QAbstractTableModel
 public:
 
     explicit FilesModel(QObject* parent = nullptr);
+    FilesModel(const QString path, QObject* parent = nullptr);
     virtual ~FilesModel() override;
 
 public:
@@ -86,6 +89,8 @@ public:
 
 private:
 
+    QString m_path;
+
     mutable QMutex m_filesMutex;
     std::vector<FileItem> m_filesList;
     quint64 m_filesCount = 0;
@@ -96,6 +101,10 @@ private:
     QVariant headerData(int section,Qt::Orientation orientation, int role=Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;   // for QML
+
+public slots:
+
+    void onFilesUpdated();
 };
 
 // ----------------------------------------------------------------------------------------------

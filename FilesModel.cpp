@@ -25,7 +25,12 @@ std::vector<FileItem> loadFilesList(const QString& path, const QString& filter)
 
 // ----------------------------------------------------------------------------------------------
 
-FilesModel::FilesModel(QObject*)
+FilesModel::FilesModel(QObject* parent)
+{
+}
+
+FilesModel::FilesModel(const QString path, QObject*)
+    : m_path(path)
 {
 }
 
@@ -256,5 +261,17 @@ void FilesModel::clear()
 
 	endRemoveRows();
 }
+
+void FilesModel::onFilesUpdated()
+{
+    if (m_path.isEmpty())
+    {
+        return;
+    }
+
+    clear();
+    set(loadFilesList(m_path, "*.*"));
+}
+
 
 // ----------------------------------------------------------------------------------------------

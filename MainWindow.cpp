@@ -38,16 +38,16 @@ void MainWindow::createActions()
 {
     // File
     //
-    m_pEncodeAction = new QAction(tr("&Encode (Bmp to Barch) ..."), this);
+    m_pEncodeAction = new QAction(tr("&Encode (Bmp to Barch)"), this);
     m_pEncodeAction->setShortcut(QKeySequence{Qt::CTRL | Qt::Key_E});
     m_pEncodeAction->setIcon(QIcon(":/icons/Encode.png"));
-    m_pEncodeAction->setToolTip(tr("Encode file"));
+    m_pEncodeAction->setToolTip(tr("Encode file Bmp to Barch file"));
     connect(m_pEncodeAction, &QAction::triggered, this, &MainWindow::onEncode);
 
-    m_pDecodeAction = new QAction(tr("&Decode (Barch to Bmp) ..."), this);
+    m_pDecodeAction = new QAction(tr("&Decode (Barch to Bmp)"), this);
     m_pDecodeAction->setShortcut(QKeySequence{Qt::CTRL | Qt::Key_D});
     m_pDecodeAction->setIcon(QIcon(":/icons/Decode.png"));
-    m_pDecodeAction->setToolTip(tr("Decode file"));
+    m_pDecodeAction->setToolTip(tr("Decode file Barch file to Bmp file"));
     connect(m_pDecodeAction, &QAction::triggered, this, &MainWindow::onDecode);
 
     // ?
@@ -142,12 +142,6 @@ void MainWindow::createFilesView()
     //
     connect(this, &MainWindow::filesLoaded, m_filesView, &FilesView::onFilesLoaded, Qt::QueuedConnection);
 
-    //connect(m_pDecodeAction, &QAction::triggered, m_filesView, &FilesView::onDecode, Qt::QueuedConnection);
-
-    //connect(m_filesView, &FilesView::removeFromBase, &m_filesBase, &FilesBase::removeFromBase, Qt::QueuedConnection);
-
-    //connect(&m_filesBase, &FilesBase::filesLoaded, m_filesView, &FilesView::onFilesLoaded, Qt::QueuedConnection);
-
     connect(m_filesView, &FilesView::fileSelected, this, &MainWindow::onFileCliked, Qt::QueuedConnection);
     connect(m_filesView, &FilesView::fileEncode, this, &MainWindow::onEncode, Qt::QueuedConnection);
     connect(m_filesView, &FilesView::fileDecode, this, &MainWindow::onDecode, Qt::QueuedConnection);
@@ -185,12 +179,22 @@ void MainWindow::createStatusBar()
 
 void MainWindow::onEncode()
 {
-    startWorker(Arch::OperationType::Encode);
+    if (m_selectedfile.fileName().isEmpty())
+    {
+        return;
+    }
+
+    m_workerThreads.appendEncodeFile(m_selectedfile.fileName());
 }
 
 void MainWindow::onDecode()
 {
-    startWorker(Arch::OperationType::Decode);
+    if (m_selectedfile.fileName().isEmpty())
+    {
+        return;
+    }
+
+    m_workerThreads.appendDecodeFile(m_selectedfile.fileName());
 }
 
 void MainWindow::OnAboutQt()
@@ -213,16 +217,6 @@ void MainWindow::onDocumentation()
     QDesktopServices::openUrl(url);
 }
 
-void MainWindow::onFileNameChanged(const QString& fileName)
-{
-    if (m_statusFileName == nullptr)
-    {
-        return;
-    }
-
-    m_statusFileName->setText(tr(" File: %1 ").arg(fileName));
-}
-
 void MainWindow::onContextMenu(QPoint)
 {
     if (m_pContextMenu == nullptr)
@@ -231,18 +225,6 @@ void MainWindow::onContextMenu(QPoint)
     }
 
     m_pContextMenu->exec(QCursor::pos());
-}
-
-void MainWindow::onFileCliked(const FileItem& item)
-{
-    if (item.fileName().isEmpty())
-    {
-        return;
-    }
-
-    m_selectedfile = item;
-
-    onFileNameChanged(item.fileName());
 }
 
 void MainWindow::onFilesFilter(int index)
@@ -263,14 +245,26 @@ void MainWindow::onFilesFilter(int index)
     loadFiles();
 }
 
-void MainWindow::startWorker(Arch::OperationType operationType)
+void MainWindow::onFileNameChanged(const QString& fileName)
 {
-    if (m_selectedfile.fileName().isEmpty())
+    if (m_statusFileName == nullptr)
     {
         return;
     }
 
-    m_workerThreads.appendWorkerThread(m_selectedfile.fileName(), operationType);
+    m_statusFileName->setText(tr(" File: %1 ").arg(fileName));
+}
+
+void MainWindow::onFileCliked(const FileItem& item)
+{
+    if (item.fileName().isEmpty())
+    {
+        return;
+    }
+
+    m_selectedfile = item;
+
+    onFileNameChanged(item.fileName());
 }
 
 void MainWindow::loadSettings()

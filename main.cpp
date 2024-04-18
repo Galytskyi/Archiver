@@ -2,7 +2,7 @@
 
 #include <QApplication>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
@@ -13,14 +13,7 @@ int main(int argc, char *argv[])
 
     // Get work path from cmd line
     //
-    QDir dir;
-    if (argc >= 2)
-        dir = QDir(argv[1]);
-
-    if (!dir.exists())
-        dir = QDir::currentPath();
-
-    QString path = dir.absolutePath();
+    QString path = Arch::getWorkDir(argc, argv).c_str();
 
     // MainWindow
     //

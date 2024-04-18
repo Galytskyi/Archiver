@@ -1,6 +1,6 @@
 #include "WorkersBase.h"
 
-WorkersBase::WorkersBase(QObject *parent)
+WorkersBase::WorkersBase(QObject* parent)
     : QObject{parent}
 {
 }
@@ -26,8 +26,34 @@ bool WorkersBase::isEmpty()
     return m_workers.empty();
 }
 
+void WorkersBase::appendEncodeFile(const QString& fileName)
+{
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
+    appendWorkerThread(fileName, Arch::OperationType::Encode);
+}
+
+void WorkersBase::appendDecodeFile(const QString& fileName)
+{
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
+    appendWorkerThread(fileName, Arch::OperationType::Decode);
+}
+
+
 void WorkersBase::appendWorkerThread(const QString& fileName, Arch::OperationType operationType)
 {
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
     Arch::Worker* pWorker = new Arch::Worker(fileName);
     if (pWorker == nullptr)
     {
